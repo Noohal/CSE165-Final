@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ParabolicLineRenderer : MonoBehaviour
 {
-    public Transform camera;
+    [FormerlySerializedAs("camera")] public Transform cam;
     
     public Transform startPoint;
     public Vector3 endPoint = new Vector3(10, 0, 0);
@@ -17,7 +18,7 @@ public class ParabolicLineRenderer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main.transform;
+        cam = Camera.main.transform;
         line = GetComponent<LineRenderer>();
     }
 
@@ -30,7 +31,7 @@ public class ParabolicLineRenderer : MonoBehaviour
     void DrawParabola()
     {
         Vector3 start = startPoint.position;
-        Vector3 end = start + camera.forward * 2f;
+        Vector3 end = start + cam.forward * 2f;
         
         Vector3[] points = new Vector3[numPoints];
         

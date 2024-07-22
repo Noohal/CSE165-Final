@@ -12,6 +12,8 @@ public class ObjectSelectManager : MonoBehaviour
         public Vector3 position;
         public Quaternion rotation;
     }
+
+    public GameObject body;
     
     public InputActionProperty selectAction;
     
@@ -62,9 +64,12 @@ public class ObjectSelectManager : MonoBehaviour
 
     void GrabObject()
     {
-        if (selectedObject != null)
+        if (selectedObject != null && selectedObject != body)
         {
             grabbedObject = selectedObject.gameObject;
+
+            if (grabbedObject.TryGetComponent(out Rigidbody rb))
+                rb.isKinematic = true;
                 
             objectOriginTransform.position = selectedObject.transform.position;
             objectOriginTransform.rotation = selectedObject.transform.rotation;
@@ -84,8 +89,11 @@ public class ObjectSelectManager : MonoBehaviour
     {
         if (grabbedObject != null)
         {
-            grabbedObject.transform.position = objectOriginTransform.position;
-            grabbedObject.transform.rotation = objectOriginTransform.rotation;
+            if (grabbedObject.TryGetComponent(out Rigidbody rb))
+                rb.isKinematic = false;
+            
+            //grabbedObject.transform.position = objectOriginTransform.position;
+            //grabbedObject.transform.rotation = objectOriginTransform.rotation;
             
             grabbedObject = null;
         }
