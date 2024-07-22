@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class ObjectSelectManager : MonoBehaviour
 {
@@ -13,20 +14,18 @@ public class ObjectSelectManager : MonoBehaviour
     }
     
     public InputActionProperty selectAction;
-
-    private bool Select => selectAction.action.triggered;
     
     public Transform handTransform;
 
+    public LineRenderer line;
+    
     public Gradient selectedGradient;
     public Gradient neutralGradient;
-    
-    public LineRenderer line;
 
+    public LayerMask ignoreMask;
     public GameObject selectedObject;
     public GameObject grabbedObject;
 
-    private bool isGrabbing = false;
     private ObjectTransformStruct objectOriginTransform;
     
     private void Awake()
@@ -46,7 +45,7 @@ public class ObjectSelectManager : MonoBehaviour
     {
         if (Physics.Raycast(handTransform.position, handTransform.forward, out RaycastHit hit, 7f))
         {
-            if (hit.collider.name is not "Floor")
+            if (hit.collider.name is not "Floor" || hit.collider.gameObject.layer != ignoreMask)
             {
                 line.colorGradient = selectedGradient;
                 selectedObject = hit.collider.gameObject;
@@ -65,8 +64,6 @@ public class ObjectSelectManager : MonoBehaviour
     {
         if (selectedObject != null)
         {
-            isGrabbing = true;
-            
             grabbedObject = selectedObject.gameObject;
                 
             objectOriginTransform.position = selectedObject.transform.position;
@@ -87,8 +84,6 @@ public class ObjectSelectManager : MonoBehaviour
     {
         if (grabbedObject != null)
         {
-            isGrabbing = false;
-
             grabbedObject.transform.position = objectOriginTransform.position;
             grabbedObject.transform.rotation = objectOriginTransform.rotation;
             

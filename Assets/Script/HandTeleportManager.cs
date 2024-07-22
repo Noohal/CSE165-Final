@@ -14,6 +14,9 @@ public class HandTeleportManager : MonoBehaviour
 
     private bool Teleport => teleportAction.action.triggered;
 
+    public LayerMask ignoreMask;
+    private bool readyForValidMove = false;
+    
     public Vector3 destinationPosition;
     
     public LineRenderer line;
@@ -34,15 +37,20 @@ public class HandTeleportManager : MonoBehaviour
 
         if (Physics.Raycast(rightHandTransform.position, rightHandTransform.forward, out RaycastHit hit, 7f))
         {
-            line.colorGradient = validGradient;
-            destinationPosition = hit.point;
+            if (hit.collider.gameObject.layer != ignoreMask)
+            {
+                line.colorGradient = validGradient;
+                destinationPosition = hit.point;
+                readyForValidMove = true;
+            }
         }
         else
         {
             line.colorGradient = neutralGradient;
+            readyForValidMove = false;
         }
 
-        if (Teleport)
+        if (Teleport && readyForValidMove)
         {
             body.position = destinationPosition;
         }
