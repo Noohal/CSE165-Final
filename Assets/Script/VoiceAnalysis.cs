@@ -31,6 +31,11 @@ public class VoiceAnalysis : MonoBehaviour
 
     public void ShowConsentMessage(string[] values)
     {
+        var analysisString = values[0];
+
+        if (analysisString.Equals("Analysis") == false)
+            return;
+        
         if (stage != 0)
             return;
         stage = 1;

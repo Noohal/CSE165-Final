@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class TreatmentHandler : MonoBehaviour
 {
+    public Transform body;
+    
     public ObjectSelectManager selectManager;
     
     public TMP_Dropdown injuryDropdown;
@@ -41,8 +43,16 @@ public class TreatmentHandler : MonoBehaviour
         }
     }
 
-    public void BeginTreatment()
+    public void BeginTreatment(string[] values)
     {
+        var treatmentString = values[0];
+        Debug.Log(treatmentString);
+
+        if (treatmentString.Equals("Treatment") == false)
+        {
+            return;
+        }
+        
         treatmentType = injuryDropdown.value;
         
         injuriesParent.SetActive(false);
